@@ -774,9 +774,10 @@
 
   const entrega = {
     cepLoja: "02738-090",     // CEP da loja (usado só pra calcular a distância do frete, não aparece na tela)
-    frete5AteKm: 5,         // até essa distância, frete de R$5
-    frete8AteKm: 15,         // até essa distância, frete de R$20
-    freteAcimaDisso: 5,    // <-- AJUSTE AQUI: valor fixo (R$) cobrado para distâncias maiores que isso
+    freteGratisAteKm:  "distância (2km) com frete grátis",
+    frete5AteKm: "distância (5km) com frete de R$5",
+    frete10AteKm:  "distância (10km) com frete de R$15",
+    freteAcimaDisso:  "valor fixo cobrado acima disso",
   };
 
   const categorias = [
