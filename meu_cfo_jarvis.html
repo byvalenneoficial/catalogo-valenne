@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101b2d">
+<title>Meu CFO — Assistente financeiro por voz</title>
+<style>
+:root{--bg:#030911;--panel:rgba(7,21,35,.78);--panel2:rgba(6,28,43,.82);--line:rgba(51,211,255,.28);--text:#e8faff;--muted:#8ba9bb;--cyan:#36d9ff;--blue:#5b8cff;--green:#56ffd0;--red:#ff718a;--gold:#ffcf78}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 50% 0%,#0b2941 0%,#06111e 40%,#02060c 100%);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(54,217,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(54,217,255,.07) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent 85%)}
+main{position:relative;z-index:1;max-width:1000px;margin:auto;padding:22px 15px 44px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px;padding-bottom:15px;border-bottom:1px solid var(--line)}
+.brand{font-size:1.22rem;font-weight:850;letter-spacing:2.5px;text-transform:uppercase}.brand span{color:var(--cyan);text-shadow:0 0 18px #36d9ff8c}
+.tag{font-size:.68rem;letter-spacing:1.3px;color:#9eefff;border:1px solid var(--line);background:#06203499;padding:7px 10px;border-radius:3px;text-transform:uppercase}
+h1{font-size:clamp(1.8rem,6vw,3.2rem);line-height:1.05;letter-spacing:-1.5px;margin:8px 0 12px;font-weight:750}h1 em{font-style:normal;color:var(--cyan);text-shadow:0 0 22px #36d9ff4d}
+p{color:var(--muted);line-height:1.55}
+.hero,.card{position:relative;background:linear-gradient(135deg,rgba(8,28,45,.9),rgba(4,13,24,.9));border:1px solid var(--line);border-radius:7px;padding:19px;margin:15px 0;box-shadow:inset 0 0 25px #0b6c8c12,0 12px 35px #0005;overflow:hidden}
+.hero:before,.card:before{content:"";position:absolute;left:0;top:0;width:70px;height:2px;background:var(--cyan);box-shadow:0 0 16px var(--cyan)}
+.hero{text-align:center;padding:25px 16px 22px}
+.orb-wrap{width:174px;height:174px;position:relative;margin:22px auto 17px;display:grid;place-items:center}
+.orb{width:94px;height:94px;border-radius:50%;position:relative;display:grid;place-items:center;color:var(--cyan);font-size:2.1rem;background:radial-gradient(circle at 50% 50%,#0b405a 0%,#061a2a 48%,#020a12 72%);border:1px solid #4ce4ffb0;box-shadow:0 0 22px #20d5ff52,inset 0 0 25px #16bce34d}
+.orb:before,.orb:after{content:"";position:absolute;border-radius:50%;inset:-13px;border:1px solid #36d9ff6e;animation:rotate 8s linear infinite}
+.orb:after{inset:-27px;border-color:#36d9ff35;border-style:dashed;animation:rotate 18s linear infinite reverse}
+.orb-core{width:18px;height:18px;border-radius:50%;background:#a5f5ff;box-shadow:0 0 12px 5px #36d9ff80}
+.orb-wrap:before,.orb-wrap:after{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid #36d9ff25;transform:scaleX(1.0) scaleY(.35)}
+.orb-wrap:after{transform:scaleX(.35) scaleY(1.0)}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.mic{width:64px;height:64px;border-radius:50%;border:1px solid #70eeff;background:linear-gradient(145deg,#0c4c68,#071c2c);color:#dffbff;font-size:1.5rem;display:inline-grid;place-items:center;cursor:pointer;box-shadow:0 0 18px #36d9ff2e;transition:.2s}
+.mic:hover{box-shadow:0 0 25px #36d9ff8c;transform:translateY(-2px)}.mic.listening{color:#fff;border-color:var(--red);background:#551a32;box-shadow:0 0 24px #ff718a80;animation:pulse 1.1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 12px #ff718a12,0 0 28px #ff718a8c}}
+.status{font-weight:750;letter-spacing:1px;font-size:.95rem;margin:10px 0 2px;color:#b9f6ff;text-transform:uppercase}
+.transcript{min-height:30px;color:#f0fbff;margin-top:13px;overflow-wrap:anywhere}
+.hint{font-size:.82rem}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metric{position:relative;background:linear-gradient(145deg,#0a2134d9,#07111eeb);border:1px solid var(--line);padding:15px 13px;border-radius:5px;overflow:hidden}
+.metric:after{content:"";position:absolute;right:-15px;bottom:-27px;width:75px;height:75px;border:1px solid #36d9ff21;transform:rotate(45deg)}
+.metric small{color:var(--muted);display:block;margin-bottom:9px;font-size:.75rem;letter-spacing:.8px;text-transform:uppercase}.metric strong{font-size:clamp(1.05rem,4vw,1.45rem);letter-spacing:-.5px;overflow-wrap:anywhere}
+.positive{color:var(--green)}.negative{color:var(--red)}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px}.section-title h2{font-size:1rem;margin:0;letter-spacing:1px;text-transform:uppercase}
+.smallbtn,.action{border:1px solid var(--line);background:#082438;color:#c8f6ff;padding:9px 12px;border-radius:3px;font-weight:650;cursor:pointer;font-size:.83rem}.action.primary{background:#0b5369;border-color:var(--cyan);color:#eaffff}.action.danger{color:var(--red);border-color:#85394b}
+.command-list{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+.chip{background:#071e30;color:#bdefff;border:1px solid #24516a;border-radius:3px;padding:8px 10px;font-size:.8rem;cursor:pointer}.chip:hover{border-color:var(--cyan);background:#0b3046}
+.entry{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #18384b}.entry:last-child{border-bottom:0}.entry .desc{font-weight:650}.entry .meta{font-size:.78rem;color:var(--muted);margin-top:4px}.amount{white-space:nowrap;font-weight:750}.empty{color:var(--muted);padding:22px 0;text-align:center}
+.row{display:flex;gap:8px;flex-wrap:wrap}.note{font-size:.82rem;border-left:2px solid var(--gold);padding-left:11px;color:var(--muted)}
+.foot{font-size:.76rem;color:#68899c;text-align:center;margin-top:23px;letter-spacing:.3px}
+button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+@media(min-width:650px){main{padding:30px 22px 50px}.hero{padding:28px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.metric{padding:19px}.orb-wrap{width:194px;height:194px}.orb{width:102px;height:102px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><div class="brand">Meu <span>CFO</span></div><div class="tag">PRIVADO • SALVO NO CELULAR</div></div>
+  <h1>Seu dinheiro.<br><em>Sob seu comando.</em></h1>
+  <p>Fale naturalmente. O Meu CFO registra seus movimentos e responde em voz alta, sem precisar preencher formulários.</p>
+  <section class="hero">
+    <div class="tag">SISTEMA FINANCEIRO • INTERFACE DE VOZ</div>
+    <div class="orb-wrap" aria-hidden="true"><div class="orb"><div class="orb-core"></div></div></div>
+    <button id="mic" class="mic" aria-label="Começar a falar">🎙️</button>
+    <div id="status" class="status">Toque no microfone para falar</div>
+    <div id="transcript" class="transcript">Ex.: “Gastei 35 reais com gasolina.”</div>
+    <p class="hint">Dê permissão para usar o microfone quando o navegador pedir.</p>
+    <div class="command-list">
+      <button class="chip" data-say="Qual é meu saldo?">“Qual é meu saldo?”</button>
+      <button class="chip" data-say="Gastei 35 reais com gasolina">“Gastei R$ 35 com gasolina”</button>
+      <button class="chip" data-say="Recebi 2449 reais de salário">“Recebi meu salário”</button>
+      <button class="chip" data-say="Quanto gastei este mês?">“Quanto gastei este mês?”</button>
+    </div>
+  </section>
+  <section class="grid">
+    <div class="metric"><small>Saldo registrado</small><strong id="balance">R$ 0,00</strong></div>
+    <div class="metric"><small>Entradas</small><strong id="income" class="positive">R$ 0,00</strong></div>
+    <div class="metric"><small>Despesas</small><strong id="expenses" class="negative">R$ 0,00</strong></div>
+    <div class="metric"><small>Investimentos</small><strong id="investments">R$ 0,00</strong></div>
+  </section>
+  <section class="card">
+    <div class="section-title"><h2>Movimentações recentes</h2><button class="smallbtn" id="export">Exportar backup</button></div>
+    <div id="entries"><div class="empty">Ainda não há movimentações. Experimente falar com o assistente.</div></div>
+    <div class="row" style="margin-top:12px"><button class="action" id="importBtn">Restaurar backup</button><input id="importFile" type="file" accept="application/json,.json" hidden><button class="action danger" id="clear">Apagar todos os dados</button></div>
+  </section>
+  <section class="card">
+    <div class="section-title"><h2>Como conversar</h2></div>
+    <p>Você pode dizer, por exemplo:</p>
+    <ul>
+      <li>“Anota 28 reais de almoço.”</li>
+      <li>“Recebi 500 reais de um serviço.”</li>
+      <li>“Investi 100 reais.”</li>
+      <li>“Quanto sobrou este mês?”</li>
+      <li>“Quanto gastei com gasolina?”</li>
+    </ul>
+    <p class="note">Esta é uma versão inicial: reconhece comandos financeiros comuns no próprio site. Ainda não está conectada ao OpenJarvis nem a uma IA externa. A leitura de voz pode usar o serviço de reconhecimento do navegador e exigir internet; os registros ficam guardados localmente neste navegador.</p>
+  </section>
+  <div class="foot">Os dados ficam neste navegador neste aparelho. Use “Exportar backup” antes de limpar os dados do navegador ou trocar de aparelho.</div>
+</main>
+<script>
+(() => {
+ const KEY='meuCFO_voice_v1';
+ let data=[];
+ try { data=JSON.parse(localStorage.getItem(KEY)||'[]'); if(!Array.isArray(data)) data=[]; } catch(e){data=[];}
+ const $=id=>document.getElementById(id);
+ const money=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(n||0);
+ const speak=text=>{
+   $('status').textContent=text;
+   if('speechSynthesis' in window){ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='pt-BR'; u.rate=1; speechSynthesis.speak(u); }
+ };
+ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){speak('Não consegui salvar. O armazenamento do navegador pode estar cheio.');}};
+ const totals=()=>data.reduce((t,x)=>{if(x.type==='entrada')t.income+=x.amount;else if(x.type==='despesa')t.expenses+=x.amount;else if(x.type==='investimento')t.investments+=x.amount;return t;},{income:0,expenses:0,investments:0});
+ function render(){
+   const t=totals(); $('income').textContent=money(t.income);$('expenses').textContent=money(t.expenses);$('investments').textContent=money(t.investments);$('balance').textContent=money(t.income-t.expenses-t.investments);
+   $('entries').innerHTML='';
+   if(!data.length){$('entries').innerHTML='<div class="empty">Ainda não há movimentações. Experimente falar com o assistente.</div>';return;}
+   data.slice().reverse().slice(0,30).forEach(x=>{
+     const div=document.createElement('div');div.className='entry';
+     const left=document.createElement('div');const desc=document.createElement('div');desc.className='desc';desc.textContent=x.category;
+     const meta=document.createElement('div');meta.className='meta';meta.textContent=`${x.type[0].toUpperCase()+x.type.slice(1)} • ${new Date(x.date).toLocaleDateString('pt-BR')}`;
+     left.append(desc,meta);const amt=document.createElement('div');amt.className='amount '+(x.type==='entrada'?'positive':'negative');amt.textContent=(x.type==='entrada'?'+ ':'− ')+money(x.amount);div.append(left,amt);$('entries').append(div);
+   });
+ }
+ function amountFrom(s){
+   const m=s.match(/(?:r\\$\\s*)?(\\d+(?:[.,]\\d{1,2})?)(?:\\s*(?:reais|real|r\\$))?/i);
+   if(!m)return null; let n=Number(m[1].replace(',','.'));return Number.isFinite(n)&&n>0?n:null;
+ }
+ function process(raw){
+   const s=raw.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').trim();
+   $('transcript').textContent='Você disse: “'+raw+'”';
+   const t=totals();
+   if(/saldo|quanto sobrou|quanto tenho|meu dinheiro/.test(s)){speak(`Seu saldo registrado é ${money(t.income-t.expenses-t.investments)}. Suas entradas somam ${money(t.income)} e suas despesas somam ${money(t.expenses)}.`);return;}
+   if(/quanto gastei|total de despesa|minhas despesas/.test(s)){
+     let list=data.filter(x=>x.type==='despesa');const cat=s.match(/com ([a-z ]+)/);if(cat){const c=cat[1].trim();list=list.filter(x=>x.category.toLowerCase().includes(c));}
+     const sum=list.reduce((a,x)=>a+x.amount,0);speak(`Você registrou ${money(sum)} em despesas${cat?' nessa categoria':''}.`);return;
+   }
+   if(/quanto recebi|total de entrada|minhas entradas/.test(s)){speak(`Você registrou ${money(t.income)} em entradas.`);return;}
+   const amount=amountFrom(s);
+   if(!amount){speak('Não consegui identificar o valor. Tente dizer, por exemplo: gastei 35 reais com gasolina.');return;}
+   let type='despesa';
+   if(/recebi|salario|salário|entrou|ganhei|entrada|renda/.test(s))type='entrada';
+   else if(/investi|investimento|apliquei/.test(s))type='investimento';
+   else if(/divida|dívida|emprestimo|empréstimo/.test(s))type='despesa';
+   let category='Outros';
+   const known=['gasolina','combustivel','almoço','almoco','mercado','supermercado','aluguel','conta de luz','água','agua','internet','transporte','farmácia','farmacia','salário','salario','freelance','investimento','parcela','lazer'];
+   const found=known.find(k=>s.includes(k.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'')));
+   if(found)category=found[0].toUpperCase()+found.slice(1);
+   else if(type==='entrada')category=/salario/.test(s)?'Salário':'Entrada';
+   else if(type==='investimento')category='Investimento';
+   else {const m=s.match(/(?:com|de|do|da|no|na) ([a-z ]{2,30})/);if(m)category=m[1].trim().replace(/\\b\\w/g,c=>c.toUpperCase());}
+   const item={id:Date.now(),type,amount,category,date:new Date().toISOString()};
+   data.push(item);save();render();
+   const verb=type==='entrada'?'Entrada registrada':type==='investimento'?'Investimento registrado':'Despesa registrada';
+   speak(`${verb}: ${money(amount)} em ${category}. Saldo registrado agora: ${money(totals().income-totals().expenses-totals().investments)}.`);
+ }
+ const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ let recognition=null, listening=false;
+ if(Recognition){recognition=new Recognition();recognition.lang='pt-BR';recognition.interimResults=false;recognition.maxAlternatives=1;
+   recognition.onstart=()=>{listening=true;$('mic').classList.add('listening');$('status').textContent='Estou ouvindo… fale agora';};
+   recognition.onresult=e=>process(e.results[0][0].transcript);
+   recognition.onerror=e=>{const msg=e.error==='not-allowed'?'Permissão do microfone negada. Libere o microfone nas configurações do navegador.':e.error==='no-speech'?'Não ouvi nada. Toque no microfone e tente novamente.':'Não consegui ouvir. Verifique sua conexão e tente novamente.';$('status').textContent=msg;};
+   recognition.onend=()=>{listening=false;$('mic').classList.remove('listening');};
+ }
+ $('mic').addEventListener('click',()=>{if(!recognition){speak('Este navegador não oferece reconhecimento de voz aqui. Abra o site no Chrome atualizado e tente novamente.');return;}if(listening){recognition.stop();return;}try{recognition.start();}catch(e){$('status').textContent='Aguarde um instante e tente novamente.';}});
+ document.querySelectorAll('[data-say]').forEach(b=>b.addEventListener('click',()=>process(b.dataset.say)));
+ $('export').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='meu-cfo-backup.json';a.click();URL.revokeObjectURL(a.href);speak('Backup preparado para salvar.');});
+ $('importBtn').addEventListener('click',()=>$('importFile').click());
+ $('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const parsed=JSON.parse(await f.text());if(!Array.isArray(parsed)||!parsed.every(x=>x.type&&Number(x.amount)>=0))throw Error();data=parsed;save();render();speak('Backup restaurado.');}catch(err){speak('Esse arquivo não parece ser um backup válido do Meu CFO.');}e.target.value='';});
+ $('clear').addEventListener('click',()=>{if(confirm('Apagar permanentemente as movimentações guardadas neste navegador? Exporte um backup antes, se quiser guardar uma cópia.')){data=[];save();render();speak('Dados apagados deste navegador.');}});
+ render();
+})();
+</script>
+</body>
+</html>
